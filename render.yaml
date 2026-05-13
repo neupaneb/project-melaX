@@ -1,0 +1,36 @@
+databases:
+  - name: melax-db
+    plan: free
+
+services:
+  - type: web
+    name: melax-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: melax-db
+          property: connectionString
+      - key: DATABASE_SSL
+        value: "true"
+      - key: ENABLE_MOCK_PAYMENTS
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+
+  - type: static_site
+    name: melax-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: build
