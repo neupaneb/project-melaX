@@ -29,8 +29,9 @@ services:
       - key: JWT_REFRESH_EXPIRES_IN
         value: 7d
 
-  - type: static_site
+  - type: web
     name: melax-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     publishPath: build
